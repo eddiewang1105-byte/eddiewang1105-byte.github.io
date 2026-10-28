@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>回到 EV Charge Route</title>
+</head>
+<body>
+  <p id="message">正在回到 App…</p>
+  <p><a id="open" href="#">開啟 App</a></p>
+  <script>
+    const incoming = new URLSearchParams(location.search)
+    const target = new URL("evchargeroute://tesla-callback")
+    for (const key of ["code", "state", "error"]) {
+      const value = incoming.get(key)
+      if (value) target.searchParams.set(key, value)
+    }
+    const href = target.toString()
+    document.getElementById("open").href = href
+    if (!incoming.get("code") && !incoming.get("error")) {
+      document.getElementById("message").textContent = "缺少 Tesla 授權資料，請從 App 再連結一次。"
+    } else {
+      location.replace(href)
+    }
+  </script>
+</body>
+</html>
